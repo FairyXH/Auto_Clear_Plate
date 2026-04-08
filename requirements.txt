@@ -1,0 +1,5 @@
+pyinstaller
+requests
+black
+schedule
+chardet
