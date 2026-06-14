@@ -100,15 +100,17 @@ def load_uid(token):
     if uid_response.status_code == 200:
         uid_json = uid_response.json()
         data = uid_json["data"]
-        nid = data.get("user_id")
-        if not nid in _all_ids:
-            log(f"已载入用户id:{nid}")
-            _all_ids.append(nid)
+        try:
+            nid = data.get("user_id")
+            if not nid in _all_ids:
+                log(f"已载入用户id:{nid}")
+                _all_ids.append(nid)
+        except:
+            log(f"该token可能失效:{token}")
 
 
 def zan(token):
     global _all_ids
-    print(_all_ids)
     headers = {
         "User-Agent": "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/134.0.6998.136 Mobile Safari/537.36 XWEB/1340043 MMWEBSDK/20250201 MMWEBID/1424 MicroMessenger/8.0.57.2820(0x28003933) WeChat/arm64 Weixin NetType/4G Language/zh_CN ABI/arm64 MiniProgramEnv/android",
         "x-token": token,
@@ -183,6 +185,5 @@ if __name__ == "__main__":
     schedule.every().hour.at(":01").do(main)  # 每个小时01分开始打卡
     while True:
         if datetime.datetime.now().time() > datetime.time(6, 00):
-            os.system("title 光盘行动自动打卡")
             schedule.run_pending()
             time.sleep(1)
